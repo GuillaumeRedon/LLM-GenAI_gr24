@@ -1,2 +1,23 @@
 .env
 *.pyc
+__pycache__/
+
+# Ignore virtual environment directories
+venv/
+env/
+.venv/
+.env/
+# Ignore IDE specific files
+.vscode/
+.idea/
+# Ignore system files
+.DS_Store
+Thumbs.db
+# Ignore log files
+*.log
+# Ignore database files
+*.sqlite3
+# Ignore coverage reports
+htmlcov/
+.coverage
+
