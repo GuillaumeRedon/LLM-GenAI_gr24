@@ -1,4 +1,4 @@
-from langchain_community.chat_models import ChatOllama
+from langchain_ollama import ChatOllama
 
 def create_ollama_chat(model: str = "llama3", base_url: str = "http://localhost:11434", temperature: float = 0.2, max_tokens: int = 200):
     """
