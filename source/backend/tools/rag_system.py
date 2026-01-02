@@ -1,4 +1,4 @@
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from datetime import datetime
@@ -7,8 +7,6 @@ import os
 import uuid
 
 from tools.document_loader import build_document_from_fields
-
-
 
 class RAGSystem:
     """ RAG System with Chroma and HuggingFace embeddings"""

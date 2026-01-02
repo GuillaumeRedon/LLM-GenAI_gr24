@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from "react"
 import ReactMarkdown from "react-markdown"
 import { useHelpRequest } from "@/hooks/useHelpRequest"
-import "@/utils/debugHelpRequests"
+// Debug utility - uncomment for browser console debugging
+// import "@/utils/debugHelpRequests"
 
 type Message = {
   id: string
@@ -89,8 +90,8 @@ export function ChatBot(props: ChatProps) {
         content: msg.content
       }))
 
-      // Appel API
-      const response = await fetch('http://localhost:8000/v1/ask/', {
+      // Appel API (using new multi-agent endpoint)
+      const response = await fetch('http://localhost:8000/v1/ask_agent/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

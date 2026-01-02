@@ -1,8 +1,8 @@
 # Frontend - Help Center Application
 
-> Interface Next.js pour le chatbot HelpAI du Pôle Léonard de Vinci
+> Next.js interface for HelpAI chatbot with Multi-Agent backend
 
-## 🚀 Démarrage rapide
+## 🚀 Quick Start
 
 ```bash
 cd source\frontend\help-center
@@ -10,15 +10,22 @@ npm install
 npm run dev
 ```
 
-**Application accessible sur** : http://localhost:3000
+**Application accessible at**: http://localhost:3000
 
 ## 📋 Configuration
 
-Créer `.env.local` :
+Create `.env.local`:
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
+
+## 🤖 Features
+
+- **Multi-Agent Chat**: Uses `/v1/ask_agent/` endpoint with 3-agent workflow
+- **Real-time conversation** with AI assistant
+- **Help request management** for unanswered questions
+- **Markdown support** for rich responses
 
 ## 🛠️ Stack
 

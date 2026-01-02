@@ -1,188 +1,201 @@
 # ESILV Smart Assistant
 
-> Assistant conversationnel intelligent pour l'école d'ingénieurs ESILV utilisant la technologie RAG (Retrieval-Augmented Generation) et les modèles LLM.
+> Intelligent conversational assistant for the ESILV engineering school using RAG (Retrieval-Augmented Generation) technology and LLM models.
 
-## 📖 Présentation du projet
+## 📖 Project Overview
 
-**ESILV Smart Assistant** est un chatbot intelligent conçu pour répondre aux questions des étudiants, candidats et visiteurs concernant l'école ESILV (programmes, admissions, cours, vie étudiante, etc.).
+**ESILV Smart Assistant** is an intelligent chatbot designed to answer questions from students, candidates, and visitors about ESILV school (programs, admissions, courses, student life, etc.). It is build to assist the HelpCenter, a website that stores frequently asked questions. When a topic cannot be found using the existing hard-matching system, the user can use the Smart Assistant to get the answer it seeks. 
 
-Le système combine :
-- **RAG (Retrieval-Augmented Generation)** : pour des réponses factuelles basées sur la documentation officielle
-- **Architecture multi-agents** : pour gérer des requêtes complexes et des interactions structurées
-- **Interface moderne** : interface web intuitive pour une expérience utilisateur optimale
+The system combines:
+- **RAG (Retrieval-Augmented Generation)**: for factual answers based on official documentation
+- **Multi-agent architecture**: to handle complex queries and structured interactions
+- **Modern interface**: intuitive web interface for optimal user experience
 
-### Cas d'usage
-- Répondre aux questions sur les programmes et admissions
-- Fournir des informations sur les cours et la vie étudiante
-- Collecter les coordonnées des visiteurs pour un suivi personnalisé
-- Recherche sémantique dans la documentation ESILV
+### Use Cases
+- Answer questions about programs and admissions
+- Provide information on courses and student life
+- Collect visitor details for personalized follow-up
+- Semantic search in ESILV documentation
 
 ## 🏗️ Architecture
 
-Le projet suit une architecture **client-serveur** moderne :
+The project follows a modern **client-server** architecture with **multi-agent system**:
 
 ```
-┌─────────────────┐         ┌──────────────────┐         ┌────────────────┐
-│   Frontend      │ HTTP    │     Backend      │         │    Ollama      │
-│   (Next.js)     ├────────►│   (FastAPI)      ├────────►│  (LLama3 LLM)  │
-│   Port 3000     │         │   Port 8000      │         │                │
-└─────────────────┘         └────────┬─────────┘         └────────────────┘
+┌─────────────────┐         ┌──────────────────────────────┐         ┌────────────────┐
+│   Frontend      │ HTTP    │     Backend (Multi-Agent)    │         │    Ollama      │
+│   (Next.js)     ├────────►│   (FastAPI + LangGraph)      ├────────►│  (Gemma2:2b)   │
+│   Port 3000     │         │   Port 8000                  │         │                │
+└─────────────────┘         └────────┬─────────────────────┘         └────────────────┘
                                      │
                                      ▼
                             ┌────────────────┐
                             │   ChromaDB     │
                             │ (Vector Store) │
                             └────────────────┘
+
+Multi-Agent Workflow:
+  Agent 1: Document Retriever → Agent 2: Answer Generator → Agent 3: Quality Validator
 ```
 
-### Backend (FastAPI + LangChain)
-- API REST pour le chatbot
-- Système RAG avec ChromaDB et HuggingFace embeddings
-- Intégration Ollama (Llama3) pour la génération de réponses
-- Endpoints : `/v1/ask/` (chat), `/v1/add_question/` (ajout Q&A)
+### Backend (FastAPI + LangChain + LangGraph)
+- REST API for the chatbot
+- **Multi-agent RAG system** with 3 specialized agents
+- RAG with ChromaDB and HuggingFace embeddings
+- Ollama (Gemma2:2b) integration for fast response generation
+- Endpoints: `/v1/ask_agent/` (multi-agent), `/v1/add_question/` (add Q&A)
 
 ### Frontend (Next.js)
-- Interface conversationnelle moderne
-- Composants React réutilisables (Chat, SearchCard, etc.)
-- Gestion d'état et hooks personnalisés
-- Design responsive avec Tailwind CSS
+- Modern conversational interface
+- Reusable React components (Chat, SearchCard, etc.)
+- State management and custom hooks
+- Responsive design with Tailwind CSS
 
-### Base de données vectorielle
-- **ChromaDB** : stockage des embeddings pour la recherche sémantique
-- **Sentence Transformers** : modèle multilingue pour les embeddings français
+### Vector Database
+- **ChromaDB**: storage of embeddings for semantic search
+- **Sentence Transformers**: multilingual model for French embeddings
 
-## 🛠️ Stack technique
+## 🛠️ Technical Stack
 
 ### Backend
-- **FastAPI** : framework web moderne et performant
-- **LangChain** : orchestration des modèles LLM et RAG
-- **ChromaDB** : base de données vectorielle
-- **Ollama** : déploiement local de Llama3
-- **HuggingFace Transformers** : embeddings multilingues (`paraphrase-multilingual-MiniLM-L12-v2`)
+- **FastAPI**: modern and performant web framework
+- **LangChain**: orchestration of LLM and RAG models
+- **LangGraph**: multi-agent workflow orchestration
+- **ChromaDB**: vector database
+- **Ollama**: local deployment of LLMs (Gemma2:2b for agents)
+- **HuggingFace Transformers**: multilingual embeddings (`paraphrase-multilingual-MiniLM-L12-v2`)
 - **Python 3.10+**
 
 ### Frontend
-- **Next.js 16** : framework React avec SSR
-- **React 19** : bibliothèque UI
-- **TypeScript** : typage statique
-- **Tailwind CSS 4** : framework CSS utilitaire
-- **Radix UI** : composants accessibles
-- **Framer Motion** : animations
+- **Next.js 16**: React framework with SSR
+- **React 19**: UI library
+- **TypeScript**: static typing
+- **Tailwind CSS 4**: utility CSS framework
+- **Radix UI**: accessible components
+- **Framer Motion**: animations
 
-## 📁 Structure du projet
+## 📁 Project Structure
 
 ```
 LLM-GenAI_gr24/
 ├── source/
-│   ├── backend/                 # API FastAPI
-│   │   ├── api/                 # Routes et endpoints
+│   ├── backend/                 # FastAPI API
+│   │   ├── agents/              # Multi-agent system (LangGraph)
+│   │   │   ├── state.py         # Agent state schema
+│   │   │   ├── nodes.py         # Agent node functions
+│   │   │   ├── graph.py         # Workflow orchestration
+│   │   │   ├── tools.py         # Agent tools (RAG wrapper)
+│   │   │   └── README.md        # Agents Orchestration README
+│   │   ├── api/                 # Routes and endpoints
 │   │   │   └── v1/
-│   │   │       └── endpoints/   # ask.py, add_question.py
-│   │   ├── schemas/             # Modèles Pydantic
+│   │   │       └── endpoints/   # ask.py, ask_agent.py, add_question.py
+│   │   ├── schemas/             # Pydantic models
 │   │   ├── tools/               # RAG system, Ollama chat, document loader
-│   │   ├── main.py              # Point d'entrée de l'application
-│   │   └── requirements.txt     # Dépendances Python
+│   │   ├── main.py              # Application entry point
+│   │   ├── requirements.txt     # Python dependencies
+│   │   └── README.md            # Backend README
 │   │
-│   ├── frontend/                # Interface utilisateur
-│   │   └── help-center/         # Application Next.js
-│   │       ├── app/             # Pages et layouts (App Router)
-│   │       ├── components/      # Composants React
-│   │       ├── hooks/           # Hooks personnalisés
-│   │       ├── lib/             # Utilitaires
-│   │       └── types/           # Types TypeScript
+│   │
+│   ├── frontend/                # User interface
+│   │   └── help-center/         # Next.js application
+│   │       ├── app/             # Pages and layouts (App Router)
+│   │       ├── components/      # React components
+│   │       ├── hooks/           # Custom hooks
+│   │       ├── lib/             # Utilities
+│   │       ├── types/           # TypeScript types
+│   │       └── README.md        # Frontend README
 │   │
 │   └── database/
-│       ├── prod/                # Base ChromaDB de production
-│       └── samples/             # Données d'exemple (JSON)
+│       ├── prod/                # Production ChromaDB database
+│       └── samples/             # Sample data (JSON)
 │
-└── README.md                    # Ce fichier
+└── README.md                    # This file
 ```
 
-## ⚙️ Prérequis
+## ⚙️ Prerequisites
 
-Avant de commencer, assurez-vous d'avoir :
+Before starting, make sure you have:
 
-- **Python 3.12** installé
-- **Node.js 20+** et **npm**
-- **Ollama** installé ([https://ollama.ai](https://ollama.ai))
-- **Git** pour cloner le repository
-- Au moins **8 GB de RAM** (pour Llama3)
+- **Python 3.12** installed
+- **Node.js 20+** and **npm**
+- **Ollama** installed ([https://ollama.ai](https://ollama.ai))
+- **Git** to clone the repository
 
-## 🚀 Installation et lancement
+## 🚀 Installation and Launch
 
-### 1. Cloner le projet
+### 1. Clone the Project
 
 ```bash
 git clone https://github.com/GuillaumeRedon/LLM-GenAI_gr24.git
 cd LLM-GenAI_gr24
 ```
 
-### 2. Configuration Ollama
+### 2. Ollama Configuration
 
 ```bash
-# Démarrer le serveur Ollama (Terminal 1)
+# Start the Ollama server (Terminal 1)
 ollama serve
 
-# Télécharger le modèle Llama3 (Terminal 2)
-ollama pull llama3
+# Download the models (Terminal 2)
+ollama pull gemma2:2b      # For multi-agent system (faster)
 ```
 
-### 3. Backend - Installation et démarrage
+### 3. Backend - Installation and Startup
 
 ```bash
 cd source/backend
 
-# Créer un environnement virtuel (recommandé)
-python3.12 -m venv venv
-source venv/bin/activate  # Linux/Mac
-# ou
-venv\Scripts\activate     # Windows
+# Create a virtual environment (recommended)
+python3.12 -m venv .venv
+source .venv/bin/activate  # Linux/Mac
+# or
+.venv\Scripts\activate.ps1     # Windows
 
-# Installer les dépendances
+# Install dependencies
 pip install -r requirements.txt
 
-# Lancer le serveur
+# Start the server
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-✅ **Backend disponible** : [http://localhost:8000](http://localhost:8000)  
-📚 **Documentation Swagger** : [http://localhost:8000/docs](http://localhost:8000/docs)
+✅ **Backend available**: [http://localhost:8000](http://localhost:8000)  
+📚 **Swagger documentation**: [http://localhost:8000/docs](http://localhost:8000/docs)
 
-### 4. Frontend - Installation et démarrage
+### 4. Frontend - Installation and Startup
 
 ```bash
 cd source/frontend/help-center
 
-# Installer les dépendances
+# Install dependencies
 npm install
 
-# Lancer l'application
+# Start the application
 npm run dev
 ```
 
-✅ **Frontend disponible** : [http://localhost:3000](http://localhost:3000)
+✅ **Frontend available**: [http://localhost:3000](http://localhost:3000)
 
-## 🔐 Variables d'environnement
+## 🔐 Environment Variables
 
-### Backend (.env dans source/backend/)
+### Backend (.env in source/backend/)
 
 ```env
-# Optionnel - Configuration ChromaDB ou autres services
+# Optional - ChromaDB configuration or other services
 DATABASE_PATH=../database/prod
 ```
 
-### Frontend (.env.local dans source/frontend/help-center/)
+### Frontend (.env.local in source/frontend/help-center/)
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
 
-## 📦 Scripts principaux
+## 📦 Main Scripts
 
 ### Backend
 
 ```bash
-# Développement avec rechargement automatique
+# Development with automatic reload
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
 # Production
@@ -192,34 +205,34 @@ uvicorn main:app --host 0.0.0.0 --port 8000
 ### Frontend
 
 ```bash
-npm run dev      # Mode développement (port 3000)
-npm run build    # Build de production
-npm start        # Serveur de production
-npm run lint     # Vérification du code
+npm run dev      # Development mode (port 3000)
+npm run build    # Production build
+npm start        # Production server
+npm run lint     # Code verification
 ```
 
-## 🧪 Utilisation
+## 🧪 Usage
 
-### Poser une question au chatbot
+### Ask a Question to the Chatbot
 
-**Endpoint** : `POST /v1/ask/`
+**Multi-Agent Endpoint**: `POST /v1/ask_agent/`
 
 ```json
 {
   "messages": [
-    { "role": "user", "content": "Quels sont les programmes de l'ESILV ?" }
+    { "role": "user", "content": "What are the ESILV programs?" }
   ]
 }
 ```
 
-### Ajouter une nouvelle Q&A
+### Add a New Q&A
 
-**Endpoint** : `POST /v1/add_question/`
+**Endpoint**: `POST /v1/add_question/`
 
 ```json
 {
-  "titre": "Admission ESILV",
-  "contenu": "Les admissions se font via Parcoursup...",
+  "titre": "ESILV Admission",
+  "contenu": "Admissions are done through Parcoursup...",
   "thematique": "Admissions",
   "ecoles": "ESILV",
   "utilisateurs": "Candidats",
@@ -227,36 +240,36 @@ npm run lint     # Vérification du code
 }
 ```
 
-## 📚 Bonnes pratiques
+## 📚 Best Practices
 
 ### Code
-- **Backend** : respecter les conventions PEP 8 pour Python
-- **Frontend** : utiliser TypeScript pour le typage fort
-- **Commits** : messages clairs et descriptifs (ex : `feat: add chat history`)
+- **Backend**: follow PEP 8 conventions for Python
+- **Frontend**: use TypeScript for strong typing
+- **Commits**: clear and descriptive messages (e.g., `feat: add chat history`)
 
 ### Architecture
-- Séparer la logique métier dans `tools/` (backend)
-- Créer des composants réutilisables (frontend)
-- Utiliser les hooks personnalisés pour la logique d'état
+- Separate business logic in `tools/` (backend)
+- Create reusable components (frontend)
+- Use custom hooks for state logic
 
 ### Performance
-- Les embeddings sont générés au premier lancement (peut prendre quelques minutes)
-- ChromaDB persiste automatiquement les données
-- Utiliser `search_kwargs={"k": 6}` pour limiter le nombre de documents récupérés
+- Embeddings are generated on first launch (may take a few minutes)
+- ChromaDB automatically persists data
+- Use `search_kwargs={"k": 6}` to limit the number of retrieved documents
 
-### Sécurité
-- Valider toutes les entrées utilisateur avec Pydantic (backend)
-- Configurer CORS correctement en production
-- Ne jamais exposer les clés API dans le code source
+### Security
+- Validate all user inputs with Pydantic (backend)
+- Configure CORS correctly in production
+- Never expose API keys in source code
 
-## 🔗 Ressources utiles
+## 🔗 Useful Resources
 
-- [Documentation FastAPI](https://fastapi.tiangolo.com/)
-- [Documentation LangChain](https://python.langchain.com/)
+- [FastAPI Documentation](https://fastapi.tiangolo.com/)
+- [LangChain Documentation](https://python.langchain.com/)
 - [Ollama Models](https://ollama.ai/library)
 - [Next.js Documentation](https://nextjs.org/docs)
 - [ChromaDB Documentation](https://docs.trychroma.com/)
 
-## 📄 Licence
+## 📄 License
 
-Ce projet est réalisé dans le cadre d'un projet académique pour l'ESILV.
+This project is carried out as part of an academic project for ESILV.
