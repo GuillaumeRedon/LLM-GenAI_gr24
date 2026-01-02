@@ -88,7 +88,7 @@ LLM-GenAI_gr24/
 │   │   │   └── README.md        # Agents Orchestration README
 │   │   ├── api/                 # Routes and endpoints
 │   │   │   └── v1/
-│   │   │       └── endpoints/   # ask.py, ask_agent.py, add_question.py
+│   │   │       └── endpoints/   # ask_agent.py, add_question.py
 │   │   ├── schemas/             # Pydantic models
 │   │   ├── tools/               # RAG system, Ollama chat, document loader
 │   │   ├── main.py              # Application entry point
