@@ -50,7 +50,7 @@ Retrieval (MMR Algorithm, k=8)
      ↓
 Prompt Construction (Context + Question + Conversation History)
      ↓
-IBM watsonx.ai (Llama 3.3 70B)
+Ollama local instance (Llama 3.3 70B)
      ↓
 JSON Response
 ```
@@ -81,10 +81,10 @@ JSON Response
   - High-quality semantic representations
   - CPU-compatible
   
-- **Generation**: `meta-llama/llama-3-3-70b-instruct` (IBM watsonx.ai)
+- **Generation**: `meta-llama/llama-3-3-70b-instruct` 
   - 70 billion parameters
   - Instruction-tuned for conversations
-  - Hosted on IBM Cloud
+  - Hosted locally
 
 ## 📦 Installation
 
@@ -894,15 +894,3 @@ def process_question(question):
 - [Chroma Documentation](https://docs.trychroma.com/)
 - [IBM watsonx.ai Documentation](https://www.ibm.com/docs/en/watsonx-as-a-service)
 - [HuggingFace Models](https://huggingface.co/models)
-
-## 🤝 Contributing
-
-See the main [README.md](../../README.md) for contribution guidelines.
-
-## 📧 Support
-
-For technical questions: [kryptosphere@devinci.fr](mailto:kryptosphere@devinci.fr)
-
----
-
-**Built with ❤️ for the IBM Hackathon at Pôle Léonard de Vinci**

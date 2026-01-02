@@ -2,14 +2,14 @@ from langchain_ollama import ChatOllama
 
 def create_ollama_chat(model: str = "llama3", base_url: str = "http://localhost:11434", temperature: float = 0.2, max_tokens: int = 200):
     """
-    Crée une instance ChatOllama pour interagir avec une instance Ollama locale.
+    Creates a ChatOllama instance to interact with a local Ollama instance.
     Args:
-        model: Nom du modèle Ollama (ex: "llama3", "mistral", "phi3", etc.)
-        base_url: URL de l'instance Ollama locale
-        temperature: Température du modèle
-        max_tokens: Nombre maximum de tokens générés
+        model: Name of Ollama (ex: "llama3", "mistral", "phi3", etc.)
+        base_url: URL of the local Ollama instance
+        temperature: Model temperature
+        max_tokens: Maximum number of generated tokens
     Returns:
-        ChatOllama: Instance du modèle de chat
+        ChatOllama: Chat model instance
     """
     return ChatOllama(
         model=model,

@@ -11,7 +11,7 @@ from tools.document_loader import build_document_from_fields
 
 
 class RAGSystem:
-    """Système RAG avec Chroma et embeddings HuggingFace"""
+    """ RAG System with Chroma and HuggingFace embeddings"""
 
     def __init__(
         self,
@@ -20,68 +20,68 @@ class RAGSystem:
         embedding_model: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
     ):
         """
-        Initialise le système RAG.
+        Initializes the RAG system.
         
         Args:
-            documents: Liste de documents à indexer
-            persist_directory: Répertoire pour persister la base Chroma
-            embedding_model: Modèle d'embeddings (multilingue pour français)
+            documents: List of documents to index
+            persist_directory: Directory to persist the Chroma database
+            embedding_model: Embedding model (multilingual for French)
         """
         self.persist_directory = persist_directory
         
-        # Initialiser les embeddings (modèle multilingue pour le français)
-        print(f"⏳ Chargement du modèle d'embeddings: {embedding_model}")
+        # Initialize embeddings (multilingual model for French)
+        print(f"Loading embedding model: {embedding_model} ...")
         self.embeddings = HuggingFaceEmbeddings(
             model_name=embedding_model,
             model_kwargs={'device': 'cpu'},
             encode_kwargs={'normalize_embeddings': True}
         )
-        print("✓ Modèle d'embeddings chargé")
+        print("Embedding model loaded")
         
-        # Créer ou charger la base vectorielle Chroma
-        # Vérifier si la base existe déjà avec des données
+        # Create or load the Chroma vector store
+        # Check if the store already exists with data
         db_exists = False
         if os.path.exists(persist_directory):
             try:
-                # Essayer de charger une base existante
+                # Try to load an existing store
                 test_store = Chroma(
                     persist_directory=persist_directory,
                     embedding_function=self.embeddings
                 )
-                # Vérifier qu'elle contient des documents
+                # Check if it contains documents
                 if test_store._collection.count() > 0:
                     db_exists = True
                     self.vectorstore = test_store
-                    print(f"✓ Base vectorielle chargée depuis {persist_directory} ({test_store._collection.count()} documents)")
+                    print(f"Vector store loaded from {persist_directory} ({test_store._collection.count()} documents)")
             except:
                 db_exists = False
         
         if not db_exists:
             if documents is None:
-                raise ValueError("Aucun document fourni pour initialiser la base vectorielle.")
-            print(f"⏳ Création de la base vectorielle avec {len(documents)} documents...")
-            print("   Cela peut prendre quelques minutes pour générer les embeddings...")
+                raise ValueError("No documents provided to initialize the vector store.")
+            print(f"Creating vector store with {len(documents)} documents...")
+            print("   This may take a few minutes to generate embeddings...")
             
-            # Créer le dossier s'il n'existe pas
+            # Create the directory if it doesn't exist
             os.makedirs(persist_directory, exist_ok=True)
             
-            # Créer la base vectorielle et la persister
+            # Create the vector store and persist it
             self.vectorstore = Chroma.from_documents(
                 documents=documents,
                 embedding=self.embeddings,
                 persist_directory=persist_directory
             )
             
-            print(f"✓ Base vectorielle créée et sauvegardée dans {persist_directory}")
+            print(f"Vector store created and saved in {persist_directory}")
         
-        # Créer le retriever
+        # Create the retriever
         self.retriever = self.vectorstore.as_retriever(
             search_type="similarity",
-            search_kwargs={"k": 6}  # Retourner les 6 documents les plus similaires
+            search_kwargs={"k": 6}  # Return the 6 most similar documents
         )
     
     def get_retriever(self):
-        """Retourne le retriever pour utilisation dans une chaîne RAG"""
+        """Return the retriever for use in a RAG chain"""
         return self.retriever
     
     def add_question(
@@ -97,7 +97,7 @@ class RAGSystem:
         status: str = ""
     ):
         """
-        Ajoute ou met à jour une question dans la base vectorielle.
+        Adds or updates a question in the vector store.
         """
         generated_id = str(uuid.uuid4())
         doc = build_document_from_fields(
@@ -115,11 +115,10 @@ class RAGSystem:
 
         doc_id = generated_id
 
-        # Supprime un ancien document portant le même ID si présent
+        # Remove an old document with the same ID if present
         try:
             self.vectorstore.delete(ids=[doc_id])
         except Exception:
-            pass  # l’ID n’existait pas encore
-
+            pass  # The ID did not exist yet
         self.vectorstore.add_documents([doc], ids=[doc_id])
         #self.vectorstore.persist()

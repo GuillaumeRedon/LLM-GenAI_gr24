@@ -15,8 +15,8 @@ def build_document_from_fields(
     status: str = ""
 ) -> Document:
     """
-    Construit un Document LangChain depuis des champs individuels
-    en respectant le format existant.
+    Builds a LangChain Document from individual fields
+    respecting the existing format.
     """
     text_content = f"""[Écoles: {ecoles or 'N/A'}] [Thématique: {thematique or ''}]
 
@@ -41,20 +41,20 @@ Réponse: {contenu}"""
 
 def load_qa_documents(json_path: str) -> List[Document]:
     """
-    Charge les documents Q&A depuis le fichier JSON.
+    Loads the Q&A documents from the JSON file.
     
     Args:
-        json_path: Chemin vers le fichier QA_clean.json
+        json_path: Path to the QA_clean.json file
         
     Returns:
-        Liste de Documents LangChain avec métadonnées
+        List of LangChain Documents with metadata
     """
     with open(json_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
     
     documents = []
     for item in data:
-        # Créer le contenu textuel enrichi avec contexte important
+        # Create the enriched text content with important context
         ecoles = ', '.join(item.get('Écoles', [])) if item.get('Écoles', []) else 'N/A'
         thematiques = item.get('Thématiques', '')
         
@@ -64,7 +64,7 @@ Question: {item.get('Title', '')}
 
 Réponse: {item.get('Content', '')}"""
         
-        # Créer les métadonnées (pour filtrage et traçabilité)
+        # Create the metadata (for filtering and traceability)
         metadata = {
             'id': item.get('id'),
             'title': item.get('Title', ''),
@@ -77,9 +77,9 @@ Réponse: {item.get('Content', '')}"""
             'status': item.get('Status', '')
         }
 
-        # Créer le document LangChain
+        # Create the LangChain document
         doc = Document(page_content=text_content, metadata=metadata)
         documents.append(doc)
 
-    print(f"✓ Chargé {len(documents)} documents depuis {json_path}")
+    print(f"Loaded {len(documents)} documents from {json_path}")
     return documents
