@@ -154,7 +154,7 @@ export function ChatBot(props: ChatProps) {
                   <button
                     key={index}
                     onClick={() => setInput(suggestion)}
-                    className="block text-left p-3 text-sm bg-gray-100 cursor-pointer hover:bg-purple-accent hover:text-white rounded-lg transition-all duration-200"
+                    className="block text-left p-3 text-sm bg-gray-100 strong-blue cursor-pointer hover:bg-purple-accent hover:text-white rounded-lg transition-all duration-200"
                   >
                     {suggestion}
                   </button>
@@ -271,7 +271,7 @@ export function ChatBot(props: ChatProps) {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={isChatDisabled ? "Chat désactivé - demande d'aide envoyée" : "Tapez votre message..."}
-              className={`flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-accent focus:border-transparent transition-all duration-200 ${
+              className={`flex-1 px-4 py-3 border border-gray-200 strong-blue rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-accent focus:border-transparent transition-all duration-200 ${
                 isChatDisabled ? 'bg-gray-100 cursor-not-allowed' : ''
               }`}
               style={{

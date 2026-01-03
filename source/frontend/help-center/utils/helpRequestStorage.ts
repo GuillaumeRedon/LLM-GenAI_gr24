@@ -1,7 +1,7 @@
 import { HelpRequest, HelpRequestStorage, ConversationMessage } from '@/types/helpRequest';
 
 const STORAGE_KEY = 'help-requests';
-const DEFAULT_USER_EMAIL = 'lucas.barrez@edu.devinci.fr';
+const DEFAULT_USER_EMAIL = 'theo.renoir@edu.devinci.fr';
 
 export const getHelpRequests = (): HelpRequest[] => {
   try {

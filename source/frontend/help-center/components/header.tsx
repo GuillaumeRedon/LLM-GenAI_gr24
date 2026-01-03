@@ -86,7 +86,7 @@ export default function Header() {
                                 aria-label="User menu"
                             >
                                 <div className="flex items-center justify-center gap-2">
-                                    <span className="text-gray-600 font-medium hidden md:inline">Lucas BARREZ</span>
+                                    <span className="text-gray-600 font-medium hidden md:inline">Guillaume REDON</span>
                                     <GraduationCap />
                                     <span className="font-medium md:hidden">Menu</span>
                                 </div>
@@ -97,16 +97,16 @@ export default function Header() {
                                     <div className="px-4 pb-4 border-b border-gray-200">
                                         <div className="flex flex-col">
                                             <div className="flex items-center text-lg font-semibold strong-blue">
-                                                Lucas BARREZ
+                                                Guillaume REDON
                                                 <span className="ml-2 bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
                                                     Étudiant
                                                 </span>
                                             </div>
                                             <a
-                                                href="mailto:lucas.barrez@edu.devinci.fr"
+                                                href="mailto:theo.renoir@edu.devinci.fr"
                                                 className="text-gray-600 hover:text-blue-600 text-sm mt-1"
                                             >
-                                                lucas.barrez@edu.devinci.fr
+                                                theo.renoir@edu.devinci.fr
                                             </a>
                                         </div>
                                     </div>

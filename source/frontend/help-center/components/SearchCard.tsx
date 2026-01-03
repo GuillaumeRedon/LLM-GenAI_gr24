@@ -95,7 +95,7 @@ export default function SearchResponseComponent({ onOpenHelpAI }: SearchResponse
       </h1>
 
       <div className="pb-4 relative" ref={wrapperRef}>
-        <InputGroup className='bg-white h-12'>
+        <InputGroup className='bg-white h-12 strong-blue'>
           <InputGroupInput
             placeholder="Tapez votre question..."
             value={searchValue}
