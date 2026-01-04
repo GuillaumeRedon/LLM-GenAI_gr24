@@ -111,6 +111,24 @@ def validate_answer(state: AgentState) -> AgentState:
     answer = state["answer"]
     retrieved_docs = state.get("retrieved_docs", [])
     
+    # Check if the answer is a "no information" response - this is VALID
+    no_info_phrases = [
+        "je n'ai pas d'information",
+        "pas d'information",
+        "aucune information",
+        "je ne trouve pas d'information",
+        "ma base de connaissances",
+        "en dehors de mes connaissances",
+        "je ne peux pas répondre"
+    ]
+    
+    answer_lower = answer.lower()
+    if any(phrase in answer_lower for phrase in no_info_phrases):
+        state["validation"] = "VALID: Réponse appropriée indiquant l'absence d'information dans la base"
+        state["is_valid"] = True
+        print(f"✅ Auto-validation: Réponse 'pas d'information' acceptée")
+        return state
+    
     llm = create_ollama_chat(model=AGENT_MODEL, temperature=0.1)
     
     validation_template = """Tu es un validateur d'IA. Analyse si la réponse est de bonne qualité.
@@ -129,7 +147,8 @@ RÉPONSE GÉNÉRÉE:
 3. La réponse contient-elle des informations inventées non présentes dans les documents? (OUI/NON)
 
 Réponds UNIQUEMENT par: VALID ou INVALID suivi d'une raison courte.
-Format: VALID: [raison] ou INVALID: [raison]"""
+Format: VALID: [raison] ou INVALID: [raison]
+"""
     
     prompt = ChatPromptTemplate.from_template(validation_template)
     chain = prompt | llm

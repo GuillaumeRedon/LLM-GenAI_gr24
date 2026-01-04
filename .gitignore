@@ -21,3 +21,5 @@ Thumbs.db
 htmlcov/
 .coverage
 
+# Ignore latex report
+latex report/
