@@ -133,7 +133,7 @@ export function ChatBot(props: ChatProps) {
 
   const suggestions = [
     "Comment justifier une absence si je suis alternant ?",
-    "Que ce passe t-il si je ne valide pas un module ?",
+    "Que se passe t-il si je ne valide pas un module ?",
     "Quelles sont les démarches à faire pour un stage en entreprise ?",
   ]
  

@@ -15,7 +15,8 @@ class RAGSystem:
         self,
         documents: List[Document]=None,
         persist_directory: str="",
-        embedding_model: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+        embedding_model: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+        k_docs: int = 6,
     ):
         """
         Initializes the RAG system.
@@ -75,7 +76,7 @@ class RAGSystem:
         # Create the retriever
         self.retriever = self.vectorstore.as_retriever(
             search_type="similarity",
-            search_kwargs={"k": 6}  # Return the 6 most similar documents
+            search_kwargs={"k": k_docs}  # Return the 6 most similar documents
         )
     
     def get_retriever(self):
