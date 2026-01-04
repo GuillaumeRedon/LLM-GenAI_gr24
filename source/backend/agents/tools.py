@@ -5,15 +5,14 @@ from tools.rag_system import RAGSystem
 class RAGRetrieverTool:
     """Wrapper for RAG system to use as an agent tool"""
     
-    def __init__(self, persist_directory: str = "../database/prod"):
-        self.rag_system = RAGSystem(persist_directory=persist_directory)
+    def __init__(self, persist_directory: str = "../database/prod", k_docs: int = 6):
+        self.rag_system = RAGSystem(persist_directory=persist_directory, k_docs=k_docs)
     
-    def retrieve(self, question: str, k: int = 6) -> list:
+    def retrieve(self, question: str) -> list:
         """Retrieve relevant documents for a question
         
         Args:
             question: The user's question
-            k: Number of documents to retrieve (Note: currently fixed at 6 in RAGSystem)
             
         Returns:
             List of document objects with page_content and metadata

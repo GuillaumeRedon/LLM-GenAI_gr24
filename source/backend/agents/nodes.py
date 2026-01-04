@@ -8,6 +8,8 @@ from langchain_core.messages import HumanMessage, AIMessage
 
 # Lightweight model for faster agent performance
 AGENT_MODEL = "gemma2:2b"
+# Number of documents to retrieve from RAG system
+K_DOCS = 6
 
 
 def retrieve_context(state: AgentState) -> AgentState:
@@ -19,10 +21,10 @@ def retrieve_context(state: AgentState) -> AgentState:
     question = state["question"]
     
     # Initialize RAG retriever tool
-    rag_tool = RAGRetrieverTool()
+    rag_tool = RAGRetrieverTool(k_docs=K_DOCS)
     
     # Retrieve documents
-    docs = rag_tool.retrieve(question, k=6)
+    docs = rag_tool.retrieve(question)
     
     # Format documents for context
     formatted_docs = rag_tool.format_docs(docs)
